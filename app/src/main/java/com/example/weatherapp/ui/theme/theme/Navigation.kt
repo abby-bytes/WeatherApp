@@ -1,4 +1,4 @@
-package com.example.weatherapp.ui.theme
+package com.example.weatherapp.ui.theme.theme
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -21,17 +21,16 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.navigation.compose.rememberNavController
-import com.example.weatherapp.ui.theme.Screen.DailyForecast
-import com.example.weatherapp.ui.theme.Screen.Forecasts
-
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.weatherapp.MainViewModel
+import com.example.weatherapp.ui.theme.screen.DailyForecast
+import com.example.weatherapp.ui.theme.screen.Forecasts
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Navigation() {
-
-    val navController = rememberNavController()
-    var selectedIndex by remember { mutableIntStateOf(0) } // 0 = Now, 1 = Daily
+fun Navigation(viewModel: MainViewModel = viewModel()) {
+    // Removed unused navController!
+    var selectedIndex by remember { mutableIntStateOf(0) }
 
     Scaffold(
         topBar = {
@@ -41,13 +40,12 @@ fun Navigation() {
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = {
-                    Text("Halifax, Nova Scotia")
+                    Text(viewModel.weather?.location?.let { "${it.name}, ${it.region}" } ?: "Loading...")
                 }
             )
         },
         bottomBar = {
             NavigationBar(windowInsets = NavigationBarDefaults.windowInsets) {
-                // Tab 0 (Current Weather)
                 NavigationBarItem(
                     icon = { Icon(imageVector = Icons.Default.Info, contentDescription = "Now") },
                     label = { Text("Now") },
@@ -55,7 +53,6 @@ fun Navigation() {
                     onClick = { selectedIndex = 0 }
                 )
 
-                // Tab 1 Daily Forecasts
                 NavigationBarItem(
                     icon = { Icon(imageVector = Icons.Default.DateRange, contentDescription = "Daily") },
                     label = { Text("Daily") },
@@ -67,8 +64,8 @@ fun Navigation() {
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
             when (selectedIndex) {
-                0 -> DailyForecast()
-                1 -> Forecasts()
+                0 -> DailyForecast(viewModel = viewModel)
+                1 -> Forecasts(viewModel = viewModel)
             }
         }
     }

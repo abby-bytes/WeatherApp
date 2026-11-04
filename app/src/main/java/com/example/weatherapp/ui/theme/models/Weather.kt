@@ -1,4 +1,4 @@
-package com.example.weatherapp.ui.theme.Class
+package com.example.weatherapp.ui.theme.models
 
 data class Weather(
     val location: String,
