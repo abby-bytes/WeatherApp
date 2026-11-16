@@ -1,5 +1,8 @@
 package com.example.weatherapp.ui.theme.theme
 
+import android.Manifest
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -16,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -29,8 +33,26 @@ import com.example.weatherapp.ui.theme.screen.Forecasts
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Navigation(viewModel: MainViewModel = viewModel()) {
-    // Removed unused navController!
     var selectedIndex by remember { mutableIntStateOf(0) }
+
+    // Begin: Ask permission to get device location
+    val launcher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { results ->
+        if (results.values.any { it }) {
+            viewModel.refreshLocation()
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        launcher.launch(
+            arrayOf(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+        )
+    }
+    // End: Ask permission to get device location
 
     Scaffold(
         topBar = {
