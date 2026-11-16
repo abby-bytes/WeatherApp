@@ -1,5 +1,6 @@
 package com.example.weatherapp.ui.theme.screen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,11 +17,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
+import com.example.weatherapp.R
 import com.example.weatherapp.MainViewModel
 
 @Composable
@@ -49,8 +51,11 @@ fun DailyForecast(viewModel: MainViewModel) {
                         .fillMaxWidth()
                         .padding(top = 200.dp)
                 ) {
-                    AsyncImage(
-                        model = "https:${data.current.condition.icon}",
+                    // Select local drawable based on condition text
+                    val iconRes = getWeatherDrawable(data.current.condition.text)
+
+                    Image(
+                        painter = painterResource(id = iconRes),
                         contentDescription = data.current.condition.text,
                         modifier = Modifier.size(150.dp)
                     )
@@ -76,5 +81,17 @@ fun DailyForecast(viewModel: MainViewModel) {
                 }
             }
         }
+    }
+}
+
+// Helper function to map condition text to your local PNG drawables
+fun getWeatherDrawable(condition: String): Int {
+    val lower = condition.lowercase()
+    return when {
+        lower.contains("sun") || lower.contains("clear") -> R.drawable.sunny
+        lower.contains("cloud") || lower.contains("overcast") -> R.drawable.cloud
+        lower.contains("rain") || lower.contains("drizzle") -> R.drawable.lightrain
+        lower.contains("thunder") || lower.contains("storm") -> R.drawable.thunderstorm
+        else -> R.drawable.partlycloudy
     }
 }
