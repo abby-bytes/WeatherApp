@@ -28,7 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.weatherapp.MainViewModel
 import com.example.weatherapp.ui.theme.screen.DailyForecast
-import com.example.weatherapp.ui.theme.screen.Forecasts
+import com.example.weatherapp.ui.theme.screen.Forecasts // <--- Added missing import!
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

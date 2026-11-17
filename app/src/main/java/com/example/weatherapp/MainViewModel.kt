@@ -43,7 +43,6 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                     val latlng = "${result.latitude},${result.longitude}"
                     Log.i("MainViewModel", "Phone is located at $latlng.")
 
-                    // Fetch live weather using the device's coordinates!
                     getWeather(latlng)
                 }
             }

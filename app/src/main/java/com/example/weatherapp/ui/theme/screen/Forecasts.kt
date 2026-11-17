@@ -51,7 +51,7 @@ fun Forecasts(viewModel: MainViewModel) {
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(145.dp), // Taller cards to fill the screen nicely
+                            .height(145.dp),
                         shape = RoundedCornerShape(24.dp),
                         colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.85f)),
                         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
@@ -63,14 +63,14 @@ fun Forecasts(viewModel: MainViewModel) {
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            // Parse into Day Name ("Today", "Tuesday") and Date ("Nov 16")
+                            // Parse into Day Name ("Today", "Tuesday") and Date ("Nov 16, 2026")
                             val (dayName, formattedDate) = try {
                                 val parsed = LocalDate.parse(dayItem.date)
                                 val today = LocalDate.now()
                                 val day = if (parsed == today) "Today" else parsed.format(DateTimeFormatter.ofPattern("EEEE", Locale.getDefault()))
                                 val date = parsed.format(DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.getDefault()))
                                 day to date
-                            } catch (e: Exception) {
+                            } catch (_: Exception) {
                                 dayItem.date to ""
                             }
 
@@ -101,7 +101,6 @@ fun Forecasts(viewModel: MainViewModel) {
                                 )
                             }
 
-                            // Center: Larger Weather Icon
                             val iconRes = getWeatherDrawable(dayItem.day.condition.text)
                             Image(
                                 painter = painterResource(id = iconRes),
@@ -111,10 +110,10 @@ fun Forecasts(viewModel: MainViewModel) {
 
                             Spacer(modifier = Modifier.width(20.dp))
 
-                            // Right side: High / Low Temperatures + extra details
+                            // Right side: High / Low Temperatures + Humidity
                             Column(horizontalAlignment = Alignment.End) {
                                 Text(
-                                    text = "${dayItem.day.maxTempC.toInt()}° / ${dayItem.day.minTempC.toInt()}°",
+                                    text = "${dayItem.day.maxTempC.toInt()}° /${dayItem.day.minTempC.toInt()}°",
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 20.sp,
                                     color = Color.Black
